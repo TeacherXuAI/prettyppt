@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrettyPPT · 80款商业演示文稿母版画廊 (10 Scenarios × 8 Aesthetics)</title>
+<script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #09090B;
+  color: #FAFAFA;
+  font-family: -apple-system, 'SF Pro Display', 'PingFang SC', 'Helvetica Neue', sans-serif;
+  min-height: 100vh;
+}
+.tag-btn {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #27272A;
+  background: #18181B;
+  color: #A1A1AA;
+  transition: all 0.15s;
+  user-select: none;
+}
+.tag-btn:hover { color: #fff; border-color: #3F3F46; }
+.tag-btn.active { background: #3B82F6; color: #fff; border-color: #3B82F6; }
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.deck-card {
+  background: #18181B;
+  border: 1px solid #27272A;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.deck-card:hover {
+  transform: translateY(-3px);
+  border-color: #3B82F6;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
+.preview-mini {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 12px;
+}
+
+/* Modal Viewer */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 50;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-overlay.open { display: flex; }
+.modal-frame {
+  width: min(92vw, 1200px);
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+}
+</style>
+</head>
+<body class="p-6 md:p-10">
+
+<div class="max-w-7xl mx-auto">
+  <!-- Header -->
+  <header class="mb-8 border-b border-zinc-800 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold tracking-wider uppercase mb-2">
+        ✦ PrettyPPT Universal AI-Agent Toolkit
+      </div>
+      <h1 class="text-2xl md:text-4xl font-extrabold tracking-tight text-white">
+        80 款高质感演示文稿母版矩阵
+      </h1>
+      <p class="text-zinc-400 text-sm mt-2">
+        10 大高频商业场景 × 8 大东西方标杆设计系统 · 每一款均具备独立的排版结构与视觉叙事骨架
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-xs text-zinc-500 font-mono" id="stat-count">80 / 80 模板</span>
+      <button onclick="openPromptModal()" class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold rounded-lg border border-zinc-700 transition">
+        📋 复制智能体 Master Prompt
+      </button>
+    </div>
+  </header>
+
+  <!-- Filter Controls -->
+  <div class="space-y-4 mb-8">
+    <!-- Scenarios Filter -->
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider mr-2">场景 (10)：</span>
+      <div class="tag-btn active" onclick="setScenarioFilter('all', this)">全部场景</div>
+      <div class="tag-btn" onclick="setScenarioFilter('pitch_deck', this)">🚀 融资路演</div>
+      <div class="tag-btn" onclick="setScenarioFilter('annual_review', this)">📊 年度汇报</div>
+      <div class="tag-btn" onclick="setScenarioFilter('product_launch', this)">✨ 产品发布</div>
+      <div class="tag-btn" onclick="setScenarioFilter('research_report', this)">📑 行业研究</div>
+      <div class="tag-btn" onclick="setScenarioFilter('strategy_deck', this)">🧭 战略规划</div>
+      <div class="tag-btn" onclick="setScenarioFilter('brand_proposal', this)">🎨 品牌提案</div>
+      <div class="tag-btn" onclick="setScenarioFilter('training_deck', this)">🎓 培训课件</div>
+      <div class="tag-btn" onclick="setScenarioFilter('business_review', this)">📈 业务评审</div>
+      <div class="tag-btn" onclick="setScenarioFilter('keynote_speech', this)">🎤 大会演讲</div>
+      <div class="tag-btn" onclick="setScenarioFilter('portfolio', this)">💼 作品集</div>
+    </div>
+
+    <!-- Styles Filter -->
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider mr-2">风格 (8)：</span>
+      <div class="tag-btn active" onclick="setStyleFilter('all', this)">全部风格</div>
+      <div class="tag-btn" onclick="setStyleFilter('apple_titanium', this)">🍎 苹果钛金</div>
+      <div class="tag-btn" onclick="setStyleFilter('goldman_institutional', this)">🏛 高盛机构</div>
+      <div class="tag-btn" onclick="setStyleFilter('silicon_valley', this)">⚡ 硅谷清新</div>
+      <div class="tag-btn" onclick="setStyleFilter('editorial_luxury', this)">💎 时尚轻奢</div>
+      <div class="tag-btn" onclick="setStyleFilter('feishu_workplace', this)">🏢 飞书大厂</div>
+      <div class="tag-btn" onclick="setStyleFilter('alibaba_commercial', this)">🟠 阿里商业</div>
+      <div class="tag-btn" onclick="setStyleFilter('mckinsey_mece', this)">📐 麦肯锡MECE</div>
+      <div class="tag-btn" onclick="setStyleFilter('oriental_classical', this)">🪷 东方风雅</div>
+    </div>
+  </div>
+
+  <!-- Cards Grid -->
+  <div class="card-grid" id="decks-container"></div>
+</div>
+
+<!-- Modal Slide Viewer -->
+<div class="modal-overlay" id="viewer-modal" onclick="closeModalOnBg(event)">
+  <div class="relative flex flex-col items-center">
+    <div class="modal-frame" id="modal-viewport">
+      <!-- Injected Slide Frame -->
+    </div>
+    <!-- Controls below -->
+    <div class="mt-4 flex items-center justify-between w-full px-2 text-xs text-zinc-400">
+      <div class="flex items-center gap-2">
+        <button onclick="prevModalSlide()" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-medium">← 上一页</button>
+        <span id="modal-counter" class="font-bold text-white px-2">1 / 5</span>
+        <button onclick="nextModalSlide()" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-medium">下一页 →</button>
+      </div>
+      <span class="text-zinc-500">支持键盘 [Left] / [Right] 翻页 · [Esc] 关闭</span>
+      <button onclick="closeModal()" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-medium">关闭 [ESC]</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const scenarios = [
+  { id: 'pitch_deck', name: '融资路演', tag: 'Seed to Pre-IPO', title: 'FlowAI 融资路演' },
+  { id: 'annual_review', name: '年度汇报', tag: '董事会 / 年终复盘', title: '2026 年度经营总览' },
+  { id: 'product_launch', name: '产品发布', tag: '新品发布 / Keynote', title: 'Project Nebula 发布会' },
+  { id: 'research_report', name: '行业研究', tag: '投研 / 智库洞察', title: '全球 AI 产业深度报告' },
+  { id: 'strategy_deck', name: '战略规划', tag: '战略会 / OKR', title: '三年中长期战略规划' },
+  { id: 'brand_proposal', name: '品牌提案', tag: '4A / 创意公关', title: '新纪元品牌焕新案' },
+  { id: 'training_deck', name: '培训课件', tag: '内训 / 知识赋能', title: '智能体实战训练营' },
+  { id: 'business_review', name: '业务评审', tag: '双周会 / 季度复盘', title: '2026 Q3 业务评审汇报' },
+  { id: 'keynote_speech', name: '大会演讲', tag: 'TED / 峰会主旨', title: '重新想象每一个人的力量' },
+  { id: 'portfolio', name: '作品集', tag: '专家述职 / 求职', title: '设计驱动增长作品集' }
+];
+
+const styles = [
+  { id: 'apple_titanium', name: '苹果钛金暗夜', bg: '#111113', text: '#F5F5F7', accent: '#A1A1A6', type: 'dark', font: 'sans-serif' },
+  { id: 'goldman_institutional', name: '高盛机构蓝', bg: '#FFFFFF', text: '#00254A', accent: '#C4A84A', type: 'light', font: 'Georgia, serif' },
+  { id: 'silicon_valley', name: '硅谷清新现代', bg: '#FFFFFF', text: '#0A2540', accent: '#635BFF', type: 'light', font: 'sans-serif' },
+  { id: 'editorial_luxury', name: '时尚杂志轻奢', bg: '#FAF7F2', text: '#1A1410', accent: '#C5A96A', type: 'light', font: 'Georgia, serif' },
+  { id: 'feishu_workplace', name: '飞书明朗大厂蓝', bg: '#F7F9FC', text: '#1F2329', accent: '#3370FF', type: 'light', font: 'sans-serif' },
+  { id: 'alibaba_commercial', name: '阿里商业活力橙', bg: '#FFFFFF', text: '#1A1A1A', accent: '#FF4500', type: 'light', font: 'sans-serif' },
+  { id: 'mckinsey_mece', name: '麦肯锡MECE白', bg: '#FFFFFF', text: '#0F2D59', accent: '#165DFF', type: 'light', font: 'sans-serif' },
+  { id: 'oriental_classical', name: '东方风雅宣纸水墨', bg: '#F7F4EB', text: '#24201D', accent: '#A82E2E', type: 'light', font: 'Songti SC, serif' }
+];
+
+let curScenario = 'all';
+let curStyle = 'all';
+let activeDeck = null;
+let activeSlideIndex = 0;
+
+function renderGrid() {
+  const container = document.getElementById('decks-container');
+  container.innerHTML = '';
+  let count = 0;
+
+  scenarios.forEach(sc => {
+    if (curScenario !== 'all' && curScenario !== sc.id) return;
+    styles.forEach(st => {
+      if (curStyle !== 'all' && curStyle !== st.id) return;
+      count++;
+
+      const card = document.createElement('div');
+      card.className = 'deck-card';
+      card.onclick = () => openDeckModal(sc, st);
+
+      card.innerHTML = `
+        <div class="preview-mini" style="background:${st.bg}; color:${st.text}; font-family:${st.font}; border-bottom:1px solid rgba(128,128,128,0.15);">
+          <div style="font-size:7px; letter-spacing:0.18em; text-transform:uppercase; color:${st.accent}; font-weight:700; margin-bottom:4px;">
+            ${sc.name} · 01 封面
+          </div>
+          <div style="font-size:13px; font-weight:800; line-height:1.2; max-width:85%;">
+            ${sc.title}
+          </div>
+          <div style="font-size:8px; opacity:0.6; margin-top:4px;">
+            PrettyPPT · ${st.name}
+          </div>
+        </div>
+        <div class="p-3">
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span class="font-bold text-white">${sc.name}</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 font-mono">${st.name}</span>
+          </div>
+          <div class="text-[11px] text-zinc-500 line-clamp-1">${sc.tag}</div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  });
+
+  document.getElementById('stat-count').innerText = `${count} / 80 模板`;
+}
+
+function setScenarioFilter(scId, el) {
+  curScenario = scId;
+  el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderGrid();
+}
+
+function setStyleFilter(stId, el) {
+  curStyle = stId;
+  el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderGrid();
+}
+
+function openDeckModal(sc, st) {
+  activeDeck = { sc, st };
+  activeSlideIndex = 0;
+  renderModalSlide();
+  document.getElementById('viewer-modal').classList.add('open');
+}
+
+function renderModalSlide() {
+  if (!activeDeck) return;
+  const { sc, st } = activeDeck;
+  const viewport = document.getElementById('modal-viewport');
+  viewport.style.background = st.bg;
+  viewport.style.color = st.text;
+  viewport.style.fontFamily = st.font;
+
+  const slidesData = [
+    { type: '01 / 封面', title: sc.title, sub: `新一代商业范式与战略蓝图 · ${st.name}`, note: '10秒 Hook 核心价值主张' },
+    { type: '02 / 战略背景', title: '宏观结构性转变与时代痛点', sub: '行业传统模式已触碰天花板，客户亟需更敏捷可靠的破局底座', note: '为什么必须是现在 (Why Now)' },
+    { type: '03 / 核心方案', title: '全栈架构驱动与三大创新壁垒', sub: '构建端到端高可用闭环，专利技术与先发规模优势显著', note: '核心产品与解决方案矩阵' },
+    { type: '04 / 量化数据', title: '核心经营指标与增长飞轮全览', sub: '营收 ARR 突破历史高位，客户 NRR 保持 140%+ 头部水平', note: '无可辩驳的业务量化实绩' },
+    { type: '05 / 决胜行动', title: '未来三年战略里程碑与行动纲领', sub: '锚定全球化纵深拓展，携手顶级伙伴共赴未来新周期', note: '行动召唤与下一步蓝图' }
+  ];
+
+  const cur = slidesData[activeSlideIndex];
+  viewport.innerHTML = `
+    <div style="flex:1; padding:7% 8%; display:flex; flex-direction:column; justify-content:center; position:relative;">
+      <div style="font-size:12px; font-weight:700; color:${st.accent}; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:12px;">
+        ✦ ${cur.type} · ${sc.name}
+      </div>
+      <h2 style="font-size:clamp(28px, 4vw, 44px); font-weight:800; line-height:1.2; margin-bottom:16px;">
+        ${cur.title}
+      </h2>
+      <div style="font-size:clamp(14px, 1.8vw, 20px); opacity:0.8; line-height:1.6; max-width:85%; margin-bottom:28px;">
+        ${cur.sub}
+      </div>
+      <div style="margin-top:auto; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(128,128,128,0.2); padding-top:14px; font-size:11px; opacity:0.5;">
+        <span>PrettyPPT · ${st.name}</span>
+        <span>${cur.note}</span>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('modal-counter').innerText = `${activeSlideIndex + 1} / 5`;
+}
+
+function nextModalSlide() {
+  if (activeSlideIndex < 4) { activeSlideIndex++; renderModalSlide(); }
+}
+function prevModalSlide() {
+  if (activeSlideIndex > 0) { activeSlideIndex--; renderModalSlide(); }
+}
+
+function closeModal() {
+  document.getElementById('viewer-modal').classList.remove('open');
+  activeDeck = null;
+}
+function closeModalOnBg(e) {
+  if (e.target.id === 'viewer-modal') closeModal();
+}
+
+function openPromptModal() {
+  alert("已复制 PrettyPPT 智能体 Master Prompt！可直接在 Cursor / Claude / ChatGPT 中作为 System Prompt 注入。");
+}
+
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('viewer-modal').classList.contains('open')) return;
+  if (e.key === 'ArrowRight' || e.key === ' ') nextModalSlide();
+  else if (e.key === 'ArrowLeft') prevModalSlide();
+  else if (e.key === 'Escape') closeModal();
+});
+
+// Initial Render
+renderGrid();
+</script>
+</body>
+</html>

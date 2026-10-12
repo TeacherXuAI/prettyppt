@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prettyppt"
+version = "0.1.0"
+authors = [
+  { name = "PrettyPPT Team", email = "contact@prettyppt.dev" },
+]
+description = "Universal AI-Agent Presentation Toolkit: 80+ Curated Aesthetic Templates, Multi-Scenario Prompts & Multi-Format Slide Generation"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Graphics :: Presentation",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "python-pptx>=0.6.21",
+    "jinja2>=3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=22.0.0",
+]
+
+[project.scripts]
+prettyppt = "prettyppt.cli:main"
+
+[project.urls]
+"Homepage" = "https://github.com/prettyppt/prettyppt"
+"Bug Tracker" = "https://github.com/prettyppt/prettyppt/issues"
