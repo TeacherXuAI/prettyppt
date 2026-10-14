@@ -152,7 +152,10 @@ class TestExports(unittest.TestCase):
         self.assertNotIn('src="http',text)
 
     def test_pptx_editable_evidence_and_notes(self):
-        from pptx import Presentation as PptxPresentation
+        try:
+            from pptx import Presentation as PptxPresentation
+        except ImportError:
+            self.skipTest("python-pptx is not installed")
         deck=create_presentation(json.loads((ROOT/'examples/product-brief.json').read_text()))
         with tempfile.TemporaryDirectory() as directory:
             path=Path(directory)/'deck.pptx'
@@ -185,8 +188,11 @@ class TestExports(unittest.TestCase):
             self.assertEqual(read_material(p)['text'],'原始资料 42')
 
     def test_webp_is_embedded_in_native_pptx(self):
-        from PIL import Image
-        from pptx import Presentation as PptxPresentation
+        try:
+            from PIL import Image
+            from pptx import Presentation as PptxPresentation
+        except ImportError:
+            self.skipTest("PIL or python-pptx is not installed")
         with tempfile.TemporaryDirectory() as directory:
             source=Path(directory)/'sample.webp'
             Image.new('RGB',(80,40),'#123456').save(source)

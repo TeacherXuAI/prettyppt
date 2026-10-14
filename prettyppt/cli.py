@@ -1,15 +1,25 @@
-"""PrettyPPT command line: source materials, structured briefs, and templates."""
 import argparse
 import json
 import sys
 import webbrowser
 from pathlib import Path
-from .core.inputs import load_brief, prepare_materials
-from .core.planner import create_presentation
-from .core.generator import generate_html_deck, generate_pptx_deck
-from .templates.registry import list_scenarios, list_styles, get_template
-from .templates.catalog import list_templates, template_spec
-from .prompts.master_prompt import get_master_prompt
+
+# Support both direct execution and package module import
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from prettyppt.core.inputs import load_brief, prepare_materials
+    from prettyppt.core.planner import create_presentation
+    from prettyppt.core.generator import generate_html_deck, generate_pptx_deck
+    from prettyppt.templates.registry import list_scenarios, list_styles, get_template
+    from prettyppt.templates.catalog import list_templates, template_spec
+    from prettyppt.prompts.master_prompt import get_master_prompt
+else:
+    from .core.inputs import load_brief, prepare_materials
+    from .core.planner import create_presentation
+    from .core.generator import generate_html_deck, generate_pptx_deck
+    from .templates.registry import list_scenarios, list_styles, get_template
+    from .templates.catalog import list_templates, template_spec
+    from .prompts.master_prompt import get_master_prompt
 
 
 def cmd_list(args):
@@ -48,10 +58,14 @@ def cmd_generate(args):
         target = output.with_suffix('.' + fmt)
         if fmt == 'html':
             target.write_text(generate_html_deck(deck), encoding='utf-8')
+            paths.append(target.resolve())
+            print('已生成：' + str(target.resolve()))
         else:
-            generate_pptx_deck(deck, target)
-        paths.append(target.resolve())
-        print('已生成：' + str(target.resolve()))
+            if generate_pptx_deck(deck, target):
+                paths.append(target.resolve())
+                print('已生成：' + str(target.resolve()))
+            else:
+                print('PPTX 导出跳过：未安装 python-pptx 或无法生成')
     # Editable source is part of the handoff; it contains no hidden API keys.
     source = output.with_suffix('.deck.json')
     source.write_text(deck.to_json(), encoding='utf-8')
@@ -70,7 +84,10 @@ def cmd_prepare(args):
 
 
 def cmd_render(args):
-    from .core.models import Presentation
+    if __package__ in (None, ""):
+        from prettyppt.core.models import Presentation
+    else:
+        from .core.models import Presentation
     data = json.loads(Path(args.input).read_text(encoding='utf-8'))
     deck = Presentation.from_dict(data)
     target = Path(args.output)
@@ -92,7 +109,10 @@ def cmd_preview(args):
 
 
 def cmd_gallery(args):
-    from .core.gallery import build_gallery
+    if __package__ in (None, ""):
+        from prettyppt.core.gallery import build_gallery
+    else:
+        from .core.gallery import build_gallery
     pptx_dir = str(Path(args.output).parent / 'templates') if args.pptx else None
     path = build_gallery(args.output, pptx_dir=pptx_dir)
     print('模板画廊：' + path)

@@ -2,9 +2,14 @@
 import html
 import json
 from pathlib import Path
-from .generator import generate_html_deck, generate_pptx_deck
-from ..templates.catalog import list_templates
-from ..templates.registry import get_template
+try:
+    from .generator import generate_html_deck, generate_pptx_deck
+    from ..templates.catalog import list_templates
+    from ..templates.registry import get_template
+except ImportError:
+    from prettyppt.core.generator import generate_html_deck, generate_pptx_deck
+    from prettyppt.templates.catalog import list_templates
+    from prettyppt.templates.registry import get_template
 
 
 def build_gallery(output_path, pptx_dir=None):
