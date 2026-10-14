@@ -1,1 +1,4 @@
-include AGENT_SKILL.md
+include SKILL.md AGENT_SKILL.md
+recursive-include references *.md
+recursive-include examples *.json *.md *.png
+recursive-include scripts *.py *.mjs

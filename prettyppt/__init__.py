@@ -3,7 +3,7 @@ PrettyPPT: Universal AI-Agent Presentation Toolkit
 80+ Curated Aesthetic Templates, Multi-Scenario Prompts & Multi-Format Slide Generation.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __author__ = "PrettyPPT Team"
 
 from prettyppt.core.models import Presentation, Slide, Theme
@@ -21,3 +21,7 @@ __all__ = [
     "get_template",
     "get_all_templates",
 ]
+
+from prettyppt.core.planner import create_presentation
+from prettyppt.templates.catalog import list_templates, template_spec
+__all__ += ["create_presentation", "list_templates", "template_spec"]
