@@ -1,11 +1,12 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 setup(
     name="prettyppt",
     version="0.1.0",
     description="Universal AI-Agent Presentation Toolkit: 80+ Aesthetic Templates & Multi-Scenario Prompts",
     author="PrettyPPT Team",
-    packages=find_packages(),
+    packages=find_namespace_packages(include=["prettyppt*"]),
+    package_data={"prettyppt": ["viewers/*.html"]},
     include_package_data=True,
     install_requires=[
         "python-pptx>=0.6.21",

@@ -1,13 +1,15 @@
 import unittest
 import sys
 import os
+import importlib.util
+import tempfile
 
 package_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if package_root not in sys.path:
     sys.path.insert(0, package_root)
 
 from prettyppt.templates.registry import list_scenarios, list_styles, get_template, get_all_templates
-from prettyppt.core.generator import generate_html_deck
+from prettyppt.core.generator import generate_html_deck, generate_pptx_deck
 from prettyppt.core.models import Presentation, Slide, Theme
 
 class TestPrettyPPT(unittest.TestCase):
@@ -43,6 +45,24 @@ class TestPrettyPPT(unittest.TestCase):
         restored = Presentation.from_dict(deck.to_dict())
         self.assertEqual(restored.title, deck.title)
         self.assertEqual(len(restored.slides), 5)
+
+    @unittest.skipUnless(importlib.util.find_spec("pptx"), "python-pptx is not installed")
+    def test_pptx_preserves_card_content(self):
+        from pptx import Presentation as PptxPresentation
+
+        deck = get_template("pitch_deck", "apple_titanium")
+        with tempfile.TemporaryDirectory() as output_dir:
+            output_path = os.path.join(output_dir, "cards.pptx")
+            self.assertTrue(generate_pptx_deck(deck, output_path))
+            exported = PptxPresentation(output_path)
+            self.assertEqual(len(exported.slides), len(deck.slides))
+            card_text = "\n".join(
+                shape.text for shape in exported.slides[2].shapes if shape.has_text_frame
+            )
+            for card in deck.slides[2].cards:
+                for field in (card.title, card.desc, card.tag, card.metric):
+                    if field:
+                        self.assertIn(field, card_text)
 
 if __name__ == "__main__":
     unittest.main()

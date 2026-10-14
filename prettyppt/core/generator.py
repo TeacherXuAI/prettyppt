@@ -744,6 +744,34 @@ def generate_pptx_deck(pres: Presentation, output_path: str) -> bool:
                     bp.font.color.rgb = text_rgb
                     bp.space_after = Pt(12)
 
+            # Cards
+            if s.cards:
+                col_width = Inches(11.33 / len(s.cards))
+                for i, card in enumerate(s.cards):
+                    left = Inches(1.0) + (col_width * i)
+                    card_box = slide.shapes.add_textbox(
+                        left, Inches(2.6), col_width - Inches(0.2), Inches(4.0)
+                    )
+                    card_tf = card_box.text_frame
+                    card_tf.word_wrap = True
+                    fields = [
+                        (card.tag, 12, accent_rgb, True),
+                        (card.title, 20, text_rgb, True),
+                        (card.desc, 14, text_rgb, False),
+                        (card.metric, 24, accent_rgb, True),
+                    ]
+                    first_paragraph = True
+                    for text, size, color, bold in fields:
+                        if not text:
+                            continue
+                        cp = card_tf.paragraphs[0] if first_paragraph else card_tf.add_paragraph()
+                        first_paragraph = False
+                        cp.text = text
+                        cp.font.size = Pt(size)
+                        cp.font.color.rgb = color
+                        cp.font.bold = bold
+                        cp.space_after = Pt(12)
+
             # Metrics
             if s.metrics:
                 col_width = Inches(11.33 / max(len(s.metrics), 1))

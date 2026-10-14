@@ -25,8 +25,8 @@
 **PrettyPPT 的解决方案：**
 - **全智能体通用（Universal Agent）**：一套标准的 `AGENT_SKILL.md` 规范与 Master Prompt，任何大模型即插即用。
 - **顶级东西方商业审美**：萃取苹果 Keynote、高盛麦肯锡、Stripe/Linear、时尚杂志以及飞书/阿里与东方风雅的设计语法。
-- **10 大场景 × 8 大设计系统 = 80 款高质感母版**：每一款均拥有经过实战验证的叙事架构与排版细节。
-- **零依赖极速生成**：原生 Python 环境开箱即用，生成可全屏演示、翻页、导出 PDF 的交互式 HTML 或微软原生 PowerPoint (.pptx)。
+- **10 大场景 × 8 大设计系统 = 80 种核心组合**：按场景提供 5 页内容骨架，并应用不同配色与字体；各组合共用基础布局。
+- **HTML 与 PPTX 导出**：HTML 渲染支持纯 Python 回退，可翻页、全屏并通过浏览器打印为 PDF；PPTX 导出依赖 `python-pptx`，使用基础可编辑布局。
 
 ---
 
@@ -34,15 +34,21 @@
 
 ### 1. 从 GitHub 仓库一键安装
 ```bash
-pip install git+https://github.com/prettyppt/prettyppt.git
+pip install git+https://github.com/TeacherXuAI/prettyppt.git
 ```
 
 ### 2. 开发者本地安装
 ```bash
-git clone https://github.com/prettyppt/prettyppt.git
+git clone https://github.com/TeacherXuAI/prettyppt.git
 cd prettyppt
 pip install -e .
 ```
+
+### 3. 初始版本使用说明
+
+- 标准安装会安装 `jinja2` 与 `python-pptx`。HTML 渲染也提供不依赖这两个 Python 库的回退路径；模板画廊的样式通过远程 Tailwind 脚本加载，需要联网。
+- 模板中的公司、项目、经营指标、行业判断与审计措辞均为示例占位内容，不代表真实业绩或研究结论；正式使用前请替换并核对。
+- PPTX 与 HTML 使用不同渲染器，排版并不完全一致。交付前请在目标浏览器或 PowerPoint 中检查字体、换行与页面布局。
 
 ---
 

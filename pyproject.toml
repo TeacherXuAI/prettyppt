@@ -33,5 +33,12 @@ dev = [
 prettyppt = "prettyppt.cli:main"
 
 [project.urls]
-"Homepage" = "https://github.com/prettyppt/prettyppt"
-"Bug Tracker" = "https://github.com/prettyppt/prettyppt/issues"
+"Homepage" = "https://github.com/TeacherXuAI/prettyppt"
+"Bug Tracker" = "https://github.com/TeacherXuAI/prettyppt/issues"
+
+[tool.setuptools.packages.find]
+include = ["prettyppt*"]
+namespaces = true
+
+[tool.setuptools.package-data]
+prettyppt = ["viewers/*.html"]
