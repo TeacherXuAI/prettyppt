@@ -1,6 +1,7 @@
 """
 Styles Database for PrettyPPT
-Contains 16 distinct, non-overlapping design aesthetics with full color tokens, typography rules, and CSS blueprints.
+Eight core colour systems and eight legacy palettes. Geometry and narrative
+recipes live in catalog.py; style names describe references, not affiliations.
 """
 
 from typing import Dict, Any
@@ -21,7 +22,7 @@ CORE_STYLES: Dict[str, Dict[str, Any]] = {
         "card_bg": "rgba(255, 255, 255, 0.05)",
         "card_border": "rgba(255, 255, 255, 0.12)",
         "font_family": "-apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif",
-        "description": "苹果 Keynote 发布会纯正美学。深空灰/钛金微妙漫反射底质，纯净大留白，克制优雅，无花哨杂色。",
+        "description": "暗色舞台、大标题与宽留白；主次观点和关键数字分层呈现。",
         "badge": "极致克制",
     },
     "goldman_institutional": {
@@ -33,13 +34,13 @@ CORE_STYLES: Dict[str, Dict[str, Any]] = {
         "mode": "light",
         "bg_color": "#FFFFFF",
         "text_color": "#00254A",
-        "accent_color": "#C4A84A",
+        "accent_color": "#8B6B20",
         "secondary_accent": "#001832",
         "card_bg": "#F8F9FC",
         "card_border": "#E2E8F0",
         "font_family": "'Georgia', 'Times New Roman', serif",
-        "description": "华尔街与顶级战略机构蓝白。海军蓝顶线、高贵金细线、衬线标题与严密表格，尽显金融与权威背书。",
-        "badge": "顶级权威",
+        "description": "海军蓝正文与金色细线；报告式摘要、证据台账与横向条目。",
+        "badge": "机构报告",
     },
     "silicon_valley": {
         "id": "silicon_valley",
@@ -55,7 +56,7 @@ CORE_STYLES: Dict[str, Dict[str, Any]] = {
         "card_bg": "#F8F9FF",
         "card_border": "#EAECFF",
         "font_family": "-apple-system, 'Inter', 'SF Pro Text', sans-serif",
-        "description": "Stripe 与 Linear 标杆产品美学。纯净白底、圆角高质感卡片、靛蓝到青蓝的高能渐变与指标微图表。",
+        "description": "白底与靛蓝强调；分区封面、功能分栏和可编辑图表。",
         "badge": "现代产品",
     },
     "editorial_luxury": {
@@ -67,12 +68,12 @@ CORE_STYLES: Dict[str, Dict[str, Any]] = {
         "mode": "light",
         "bg_color": "#FAF7F2",
         "text_color": "#1A1410",
-        "accent_color": "#C5A96A",
+        "accent_color": "#886D31",
         "secondary_accent": "#8A7343",
         "card_bg": "#FFFFFF",
         "card_border": "#EAE4D8",
         "font_family": "'Georgia', 'Didot', serif",
-        "description": "Vogue 与爱马仕高端杂志版式。奶油米白底质、修长古典大衬线字、不对称留白与菱形典雅装饰符号。",
+        "description": "奶油白底与宋体标题；非对称栏目和错位的标题、正文关系。",
         "badge": "艺术典雅",
     },
 
@@ -91,7 +92,7 @@ CORE_STYLES: Dict[str, Dict[str, Any]] = {
         "card_bg": "#FFFFFF",
         "card_border": "#DEE0E3",
         "font_family": "-apple-system, 'PingFang SC', 'Lantinghei SC', sans-serif",
-        "description": "字节跳动/飞书官方日间商务质感。明亮整洁白灰底、标志性飞书蓝、高精工整的多维任务状态卡片。",
+        "description": "白灰底与蓝色强调；侧栏简报、编号行动项和逐步流程。",
         "badge": "高效敏捷",
     },
     "alibaba_commercial": {
@@ -103,12 +104,12 @@ CORE_STYLES: Dict[str, Dict[str, Any]] = {
         "mode": "light",
         "bg_color": "#FFFFFF",
         "text_color": "#1A1A1A",
-        "accent_color": "#FF4500",
+        "accent_color": "#C73800",
         "secondary_accent": "#FF6A00",
         "card_bg": "#FFF9F5",
         "card_border": "#FFE0D0",
         "font_family": "-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif",
-        "description": "阿里/淘宝电商商业作战质感。暖意高饱和橙色波浪层级、大字号核心业务数据卡与战报势能感。",
+        "description": "暖橙色重点、大字号关键数字；判断与说明形成清楚的对照。",
         "badge": "战功势能",
     },
     "mckinsey_mece": {
@@ -125,8 +126,8 @@ CORE_STYLES: Dict[str, Dict[str, Any]] = {
         "card_bg": "#F7F8FA",
         "card_border": "#E5E6EB",
         "font_family": "-apple-system, 'PingFang SC', 'Source Han Sans', sans-serif",
-        "description": "咨询业最高标准。顶部结构化导航带、结论先行行动标题、三位一体严苛对齐的 MECE 逻辑方阵。",
-        "badge": "极致逻辑",
+        "description": "蓝白配色与对齐网格；论点、证据和行动通过矩阵与表格组织。",
+        "badge": "论证框架",
     },
     "oriental_classical": {
         "id": "oriental_classical",
@@ -142,7 +143,7 @@ CORE_STYLES: Dict[str, Dict[str, Any]] = {
         "card_bg": "rgba(255, 255, 255, 0.7)",
         "card_border": "#E6E0D3",
         "font_family": "'STSong', 'Songti SC', 'SimSun', serif",
-        "description": "纯正东方文人风骨。温润宣纸暖白底质、远山淡墨气韵、宋体竖排题鉴与朱砂名章，不落俗套的传统意境。",
+        "description": "暖纸色底、宋体与朱红强调；右置标题、注释和错位分栏。",
         "badge": "东方意境",
     },
 }

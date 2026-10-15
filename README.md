@@ -1,154 +1,118 @@
-# 🎨 PrettyPPT
+# PrettyPPT
 
-<div align="center">
+把资料交给 Agent，说清用途，生成可编辑的 PPTX 与 HTML 演示文稿。
 
-**Universal AI-Agent Presentation Toolkit**  
-*为所有智能体量身打造的顶级审美演示文稿生成引擎与 80 款母版矩阵*
+默认 **自动选模板、适度参考、按内容决定页数**。用户可以说“严格照这套模板”或“更自由一点”，切换到保守或自由档。十个场景各有八款具备不同构图、叙事顺序和页面组合的模板，共 80 套核心参考。
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python: 3.8+](https://img.shields.io/badge/Python-3.8+-brightgreen.svg)](https://python.org)
-[![Templates: 80+](https://img.shields.io/badge/Templates-80+-purple.svg)](#-80-款核心商业母版矩阵)
-[![Zero Dependency](https://img.shields.io/badge/HTML%20Export-Zero%20Dependency-orange.svg)](#-一键安装与使用)
+**v0.2.0 格式说明：HTML 提供完整视觉效果；PPTX 提供基础可编辑排版，两者外观不完全一致。** HTML 中的渐变、光效、印章及部分布局尚未移植到原生 PPTX。需要保留完整视觉时，使用 HTML 演示或浏览器导出 PDF；需要继续编辑文字、图表和表格时，使用 PPTX。
 
-[🌟 核心特性](#-核心特性) • [🚀 快速开始](#-一键安装与使用) • [🤖 智能体挂载教程](#-让-ai-智能体拥有-prettyppt-技能) • [🎨 80款模板矩阵](#-80-款核心商业母版矩阵) • [💻 命令行-cli](#-命令行-cli-使用)
+[下载 v0.2.0](https://github.com/TeacherXuAI/prettyppt/releases/tag/v0.2.0) · [下载离线视觉画廊](https://github.com/TeacherXuAI/prettyppt/releases/download/v0.2.0/prettyppt-v0.2.0-gallery.html) · [下载模板包](https://github.com/TeacherXuAI/prettyppt/releases/download/v0.2.0/prettyppt-v0.2.0-templates.zip)
 
-</div>
+## 给 Agent 使用
 
----
+将本项目放入 Agent 可读取的工作目录，让它阅读 [SKILL.md](SKILL.md)：
 
-## 💡 为什么需要 PrettyPPT？
+> 使用 PrettyPPT。附件是我们的产品资料，做一份给潜在客户看的产品介绍 PPT。
 
-市面上多数由 AI 生成的 PPT 常常面临两个致命短板：
-1. **千篇一律的模板套路**：颜色俗气、排版凌乱、缺乏留白与呼吸感，完全无法用于正式的投资人路演或董事会汇报。
-2. **割裂的生态绑定**：很多技能只能在某一家封闭工具中使用，无法被 ChatGPT、Claude、Cursor、Dify、Coze 等通用智能体无缝复用。
+Agent 负责理解资料、组织内容、选择模板和检查页面；本工具包负责可复现的分页与 HTML/PPTX 渲染。无需为 PrettyPPT 配置新的模型 API。Agent 需要能读取文件、运行 Python 并交付生成的文件。仅粘贴提示词到没有文件或代码执行能力的聊天窗口，不会自动产生文件。
 
-**PrettyPPT 的解决方案：**
-- **全智能体通用（Universal Agent）**：一套标准的 `AGENT_SKILL.md` 规范与 Master Prompt，任何大模型即插即用。
-- **顶级东西方商业审美**：萃取苹果 Keynote、高盛麦肯锡、Stripe/Linear、时尚杂志以及飞书/阿里与东方风雅的设计语法。
-- **10 大场景 × 8 大设计系统 = 80 种核心组合**：按场景提供 5 页内容骨架，并应用不同配色与字体；各组合共用基础布局。
-- **HTML 与 PPTX 导出**：HTML 渲染支持纯 Python 回退，可翻页、全屏并通过浏览器打印为 PDF；PPTX 导出依赖 `python-pptx`，使用基础可编辑布局。
+原有 [AGENT_SKILL.md](AGENT_SKILL.md) 保留为兼容入口，与 SKILL.md 同步。
 
----
+## 安装与直接使用
 
-## 🚀 一键安装与使用
+Python 3.8+：
 
-### 1. 从 GitHub 仓库一键安装
 ```bash
 pip install git+https://github.com/TeacherXuAI/prettyppt.git
+prettyppt generate -i materials.md --purpose "给新同事做项目培训" -o output/training
 ```
 
-### 2. 开发者本地安装
-```bash
-git clone https://github.com/TeacherXuAI/prettyppt.git
-cd prettyppt
-pip install -e .
-```
+默认输出 `.pptx`、`.html` 和可继续编辑的 `.deck.json`。不指定场景、风格和页数时会自动选择。直接导入原文会保留文字并分页；需要内容概括、叙事编排和图表提炼时，使用上面的 Agent 工作流。
 
-### 3. 初始版本使用说明
+支持 TXT、Markdown、CSV、DOCX、PPTX 文字和文本型 PDF。PDF 提取另装 `pip install pypdf`。扫描件和复杂图表由 Agent 的视觉/OCR 能力读取。原文提取不等于已经理解图片内容。
 
-- 标准安装会安装 `jinja2` 与 `python-pptx`。HTML 渲染也提供不依赖这两个 Python 库的回退路径；模板画廊的样式通过远程 Tailwind 脚本加载，需要联网。
-- 模板中的公司、项目、经营指标、行业判断与审计措辞均为示例占位内容，不代表真实业绩或研究结论；正式使用前请替换并核对。
-- PPTX 与 HTML 使用不同渲染器，排版并不完全一致。交付前请在目标浏览器或 PowerPoint 中检查字体、换行与页面布局。
+## 三档参考强度
 
----
+| 档位 | 行为 | 适合的表达 |
+|---|---|---|
+| conservative / 保守 | 保留模板构图、配色和字体，替换内容，按需要扩页 | “照着这套做” |
+| moderate / 适度，默认 | 保留主视觉，按内容量调整布局、章节与页数 | “按我的资料调整” |
+| free / 自由 | 跨模板选择版式，支持自定义布局、颜色和可编辑页面元素 | “参考审美，重新设计” |
 
-## 🤖 让 AI 智能体拥有 PrettyPPT 技能
+三档都使用用户输入，不会将模板里的虚构数字自动填进真实资料。自由档的几何布局与文字容量也会检查。
 
-无论你使用的是哪种智能体或大模型平台，均可通过最简单的方式赋予其制作顶级 PPT 的能力：
+## 80 款模板
 
-### 方案 A：在 Claude Projects / ChatGPT GPTs / Cursor 中挂载
-直接将本仓库根目录下的 [`AGENT_SKILL.md`](AGENT_SKILL.md) 添加为 Project 知识库文件或系统提示词（System Prompt）。智能体即可自动学会：
-- 识别用户诉求对应的最佳场景与风格；
-- 遵循 MECE 原则输出 5 页严谨骨架；
-- 按照顶级排版规范填充内容。
+十个场景：融资路演、年度汇报、产品发布、行业研究、战略规划、品牌提案、培训课件、业务评审、大会演讲、作品集。
 
-### 方案 B：在 Python 代码中一键调用
-```python
-from prettyppt import get_template, generate_html_deck, generate_pptx_deck
+| 核心风格 ID | 构图特点 |
+|---|---|
+| apple_titanium | 深色微光背景、渐变标题、半透明卡片与指标块 |
+| goldman_institutional | 深蓝侧栏封面、金线与衬线标题、研报表格 |
+| silicon_valley | 紫青微光、产品窗口式封面、功能与数据卡片 |
+| editorial_luxury | 暖纸色、衬线排印、细线与菱形装饰 |
+| feishu_workplace | 日光浅灰底、蓝色标签、任务卡片 |
+| alibaba_commercial | 橙色强调、商业卡片与关键数字 |
+| mckinsey_mece | 深蓝导航、框架卡片与量化表格 |
+| oriental_classical | 宣纸底、宋体、朱砂印章与书卷卡片 |
 
-# 1. 获取「融资路演 × 苹果钛金暗夜」的完整5页预制模版
-deck = get_template(scenario_id="pitch_deck", style_id="apple_titanium")
+名称用于描述设计参考，项目与这些公司没有官方关联。另有八款旧版配色保留在 SDK 中，不计入 80 套核心模板。
 
-# 2. 结合用户的个性化输入快速替换内容
-deck.title = "FlowAI 融资路演"
-deck.slides[0].subtitle = "新一代企业级智能工作流协同平台 · Series A"
+下图为八款融资路演模板的实际 HTML 内容页，完整页面在离线画廊中查看。PPTX 使用基础可编辑排版：
 
-# 3. 导出为高保真交互式 HTML (支持快捷键翻页、全屏、导出PDF)
-html_str = generate_html_deck(deck)
-with open("flowai_pitch.html", "w", encoding="utf-8") as f:
-    f.write(html_str)
-
-# 4. (可选) 导出为原生微软 PowerPoint (.pptx)
-generate_pptx_deck(deck, "flowai_pitch.pptx")
-```
-
----
-
-## 🎨 80 款核心商业母版矩阵
-
-### 10 大经典商业场景 (10 Scenarios)
-| 场景 ID | 场景名称 | 典型用途 | 核心叙事骨架 |
-|---|---|---|---|
-| `pitch_deck` | **融资路演** | 创业融资、Pre-A 到 IPO | 10秒Hook → 紧迫痛点 → 核心方案与壁垒 → 增长飞轮指标 → 融资方案 |
-| `annual_review` | **年度汇报** | 年终复盘、董事会汇报 | 年度高光 → 经营大盘看板 → 三大战略战役复盘 → 痛点归因 → 新财年目标 |
-| `product_launch` | **产品发布** | 新品发布会、版本更新 | 颠覆初心 → 传统逻辑痛点 → 3大杀手级特性 → 跑分对比 → 全球发售计划 |
-| `research_report` | **行业研究** | 投研报告、智库白皮书 | 报告代号背书 → 宏观驱动力 → 产业链全景图谱 → 市场规模 CAGR → 投资评级 |
-| `strategy_deck` | **战略规划** | 高管战略会、OKR 拆解 | 愿景推演 → 战略定力判断 → 三大战略支柱 → 阶段路线图 → 组织保障机制 |
-| `brand_proposal` | **品牌提案** | 广告策划、4A 公关方案 | 时代情绪洞察 → Big Idea 概念 → 整合营销全景 → 预期传播声量 → 落地排期 |
-| `training_deck` | **培训课件** | 企业内训、知识赋能公开课 | 破除认知误区 → 结构化方法论工具 → 标杆实操剖析 → 课后7天行动清单 |
-| `business_review` | **业务评审** | 双周会、季度业务例会 | 汇报周期大盘 → 核心 OKR 达成率 → 标杆交付成果 → 阻塞卡点纾困 → 下阶段攻坚 |
-| `keynote_speech` | **大会演讲** | TED 风格演讲、峰会主旨 | 宏大共鸣破题 → 三大不可逆趋势洞见 → 真实故事触动 → 终极号召行动 |
-| `portfolio` | **作品集展示** | 个人设计作品集、专家述职 | 个人设计哲学 → 代表作深度推演 → 业务量化赋能指标 → 核心能力雷达 |
-
-### 8 大核心设计美学系统 (8 Core Aesthetics)
-| 风格 ID | 风格名称 | 流派归属 | 视觉 DNA 与特征 |
-|---|---|---|---|
-| `apple_titanium` | **苹果钛金暗夜** | 欧美极简 | 钛金深空灰漫反射底质、纯白极简标题、纯净呼吸留白、克制优雅 |
-| `goldman_institutional` | **高盛麦肯锡机构蓝** | 欧美权威 | 海军蓝(#00254A)、高贵金细线(#C4A84A)、Georgia衬线体、权威表格 |
-| `silicon_valley` | **硅谷清新现代** | 欧美现代 | 纯净白底、圆角高质感卡片、Stripe/Linear渐变与高能指标图表 |
-| `editorial_luxury` | **时尚杂志轻奢** | 欧美艺术 | 奶油米白(#FAF7F2)、修长古典衬线字、不对称艺术排版、菱形金饰 |
-| `feishu_workplace` | **飞书大厂高能明朗蓝** | 中国职场 | 飞书日间灰白底(#F7F9FC)、飞书蓝(#3370FF)、工整任务流与状态栏 |
-| `alibaba_commercial` | **阿里商业活力橙** | 中国职场 | 高饱和阿里橙(#FF4500)、波浪层次势能、大字号战报数据看板 |
-| `mckinsey_mece` | **麦肯锡严谨MECE框架白** | 咨询标准 | 顶部结构化导航带、行动性结论标题、三位一体逻辑矩阵卡片 |
-| `oriental_classical` | **东方风雅宣纸水墨** | 东方传统 | 宣纸暖白(#F7F4EB)、远山淡墨气韵、仿宋正骨排版、朱砂古印 |
-
-*(注：系统底层还支持粗野主义、数据新闻、visionOS毛玻璃、政务红蓝等 8 款扩展风格，总计 16 款视觉系统。)*
-
----
-
-## 💻 命令行 (CLI) 使用
-
-PrettyPPT 自带直观易用的命令行工具：
+![八款模板的实际内容版式](examples/template-layouts.png)
 
 ```bash
-# 1. 查看所有支持的 10 大场景与 8 大风格
-prettyppt list
-
-# 2. 生成「融资路演 × 苹果钛金暗夜」的高清 HTML 演示文件并自动在浏览器中打开
-prettyppt generate -s pitch_deck -t apple_titanium --open
-
-# 3. 生成「年度汇报 × 麦肯锡MECE」的 PPTX 幻灯片
-prettyppt generate -s annual_review -t mckinsey_mece -f pptx -o 2026_annual_review.pptx
-
-# 4. 在浏览器中打开 80 款母版全景交互画廊
 prettyppt preview
-
-# 5. 打印供智能体使用的完整 Master System Prompt
-prettyppt prompt
+prettyppt templates -s annual_review
+prettyppt gallery -o gallery/index.html --pptx
+prettyppt generate --demo -s annual_review -t editorial_luxury -o sample
 ```
 
----
+画廊预览直接使用 HTML 视觉渲染器生成；`gallery --pptx` 还会导出 80 套基础可编辑 PPTX。所有模板样例都明确标注虚构示例。HTML 和画廊不依赖远程脚本，可离线查看。
 
-## 📐 设计规范与排版铁律
+## Agent 的资料接口
 
-所有通过 PrettyPPT 产出的文稿均严格遵守四大黄金法则：
-1. **Action Title 结论先行**：正文页标题统一采用具备论断性的完整主谓短语，读者仅需扫视标题即可掌握核心脉络。
-2. **MECE 原则**：模块内容相互独立、完全穷尽，严禁信息交叉重叠。
-3. **视觉锚点原则（Visual Anchor）**：任何单页均包含至少一处高对比视觉焦点（高亮数据 Callout、卡片组、时间线或对比框）。
-4. **留白呼吸感**：版心最低保证 8% 边距，行距保持在 1.5 - 1.8 之间，拒绝杂乱密集堆叠。
+```bash
+prettyppt prepare -i product.docx feedback.pdf --purpose "客户产品介绍" -o materials.json
+# Agent 阅读资料，写出 brief.json
+prettyppt generate -i brief.json --mode moderate -o output/product
+```
 
----
+[brief 规范与自由布局说明](references/brief.md) · [完整产品示例](examples/product-brief.json) · [原文输入示例](examples/materials.md) · [自由构图示例](examples/free-layout.json)
 
-## 📄 开源许可证
+每节可包含正文、要点、并列内容、指标、原生表格、原生图表、图片和出处。长内容按容量拆页，不使用省略号截断。超长标题、过密单元格或无法容纳的自定义构图会明确报错，交回 Agent 改写。
 
-本项目基于 [MIT 许可证](LICENSE) 开源。欢迎所有开发者、设计爱好者与智能体团队参与贡献！
+```python
+import json
+from prettyppt import create_presentation, generate_html_deck, generate_pptx_deck
+
+brief = json.load(open("brief.json", encoding="utf-8"))
+deck = create_presentation(brief)  # auto / moderate / 按内容分页
+open("presentation.html", "w", encoding="utf-8").write(generate_html_deck(deck))
+generate_pptx_deck(deck, "presentation.pptx")
+```
+
+## 修改与页数
+
+```bash
+prettyppt render -i presentation.deck.json -o revised.pptx
+prettyppt generate -i brief.json --pages 10 -o presentation
+```
+
+`--pages` 是严格页数检查，包含封面。内容放不下时会要求 Agent 调整资料结构，不静默删内容或补空白页。来源进入 PPTX 备注和源文件；观众需要知道的限制应放在正文。
+
+## 验证与开发
+
+```bash
+pip install -e .
+python -m unittest discover -s tests -v
+python scripts/sync_agent_docs.py
+python -m prettyppt.cli gallery -o prettyppt/viewers/gallery.html
+```
+
+HTML 和 PPTX 共用资料模型与分页逻辑，采用不同的视觉渲染方式。自由档按指定的布局坐标、配色和自定义元素渲染。PPTX 的文字、表格与图表保持可编辑，但不等同于 HTML 视觉效果。中文字体在不同电脑上可能发生替换；交付前仍应查看目标软件的实际渲染。自动结构检查不能代替视觉检查。
+
+v0.2 的 `generate` 要求输入资料；仅生成样例时显式使用 `--demo`。`get_template()` 返回带示例标识的模板参考，生产内容使用 `create_presentation()`。
+
+[MIT License](LICENSE)

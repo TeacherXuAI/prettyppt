@@ -63,6 +63,12 @@ class Slide:
     footer: Optional[str] = None
     image_url: Optional[str] = None
     custom_classes: Optional[str] = None
+    layout: Optional[str] = None
+    sources: List[str] = field(default_factory=list)
+    notes: str = ""
+    table: Optional[Dict[str, Any]] = None
+    chart: Optional[Dict[str, Any]] = None
+    elements: List[Dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -77,6 +83,12 @@ class Slide:
             "footer": self.footer,
             "image_url": self.image_url,
             "custom_classes": self.custom_classes,
+            "layout": self.layout,
+            "sources": self.sources,
+            "notes": self.notes,
+            "table": self.table,
+            "chart": self.chart,
+            "elements": self.elements,
         }
 
 @dataclass
@@ -89,6 +101,12 @@ class Presentation:
     date: Optional[str] = None
     theme: Optional[Theme] = None
     slides: List[Slide] = field(default_factory=list)
+    mode: str = "moderate"
+    template_id: str = ""
+    purpose: str = ""
+    audience: str = ""
+    is_demo: bool = False
+    decisions: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -100,6 +118,12 @@ class Presentation:
             "date": self.date,
             "theme": self.theme.to_dict() if self.theme else None,
             "slides": [s.to_dict() for s in self.slides],
+            "mode": self.mode,
+            "template_id": self.template_id,
+            "purpose": self.purpose,
+            "audience": self.audience,
+            "is_demo": self.is_demo,
+            "decisions": self.decisions,
         }
 
     def to_json(self, indent: int = 2) -> str:
@@ -126,6 +150,12 @@ class Presentation:
                 footer=s.get("footer"),
                 image_url=s.get("image_url"),
                 custom_classes=s.get("custom_classes"),
+                layout=s.get("layout"),
+                sources=s.get("sources", []),
+                notes=s.get("notes", ""),
+                table=s.get("table"),
+                chart=s.get("chart"),
+                elements=s.get("elements", []),
             )
             slides.append(slide)
 
@@ -138,4 +168,10 @@ class Presentation:
             date=data.get("date"),
             theme=theme,
             slides=slides,
+            mode=data.get("mode", "moderate"),
+            template_id=data.get("template_id", ""),
+            purpose=data.get("purpose", ""),
+            audience=data.get("audience", ""),
+            is_demo=data.get("is_demo", False),
+            decisions=data.get("decisions", {}),
         )
