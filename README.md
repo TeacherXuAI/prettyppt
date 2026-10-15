@@ -4,6 +4,10 @@
 
 默认 **自动选模板、适度参考、按内容决定页数**。用户可以说“严格照这套模板”或“更自由一点”，切换到保守或自由档。十个场景各有八款具备不同构图、叙事顺序和页面组合的模板，共 80 套核心参考。
 
+**v0.2.0 格式说明：HTML 提供完整视觉效果；PPTX 提供基础可编辑排版，两者外观不完全一致。** HTML 中的渐变、光效、印章及部分布局尚未移植到原生 PPTX。需要保留完整视觉时，使用 HTML 演示或浏览器导出 PDF；需要继续编辑文字、图表和表格时，使用 PPTX。
+
+[下载 v0.2.0](https://github.com/TeacherXuAI/prettyppt/releases/tag/v0.2.0) · [下载离线视觉画廊](https://github.com/TeacherXuAI/prettyppt/releases/download/v0.2.0/prettyppt-v0.2.0-gallery.html) · [下载模板包](https://github.com/TeacherXuAI/prettyppt/releases/download/v0.2.0/prettyppt-v0.2.0-templates.zip)
+
 ## 给 Agent 使用
 
 将本项目放入 Agent 可读取的工作目录，让它阅读 [SKILL.md](SKILL.md)：
@@ -25,7 +29,7 @@ prettyppt generate -i materials.md --purpose "给新同事做项目培训" -o ou
 
 默认输出 `.pptx`、`.html` 和可继续编辑的 `.deck.json`。不指定场景、风格和页数时会自动选择。直接导入原文会保留文字并分页；需要内容概括、叙事编排和图表提炼时，使用上面的 Agent 工作流。
 
-支持 TXT、Markdown、CSV、DOCX、PPTX 文字和文本型 PDF。PDF 提取另装 `pip install 'prettyppt[pdf]'`。扫描件和复杂图表由 Agent 的视觉/OCR 能力读取。原文提取不等于已经理解图片内容。
+支持 TXT、Markdown、CSV、DOCX、PPTX 文字和文本型 PDF。PDF 提取另装 `pip install pypdf`。扫描件和复杂图表由 Agent 的视觉/OCR 能力读取。原文提取不等于已经理解图片内容。
 
 ## 三档参考强度
 
@@ -43,18 +47,18 @@ prettyppt generate -i materials.md --purpose "给新同事做项目培训" -o ou
 
 | 核心风格 ID | 构图特点 |
 |---|---|
-| apple_titanium | 舞台式封面、单一观点、主次数字对照 |
-| goldman_institutional | 报告封面、摘要与证据双栏、数据台账 |
-| silicon_valley | 左右分区、功能分栏、步骤流程 |
-| editorial_luxury | 杂志式非对称布局、错位栏目、宽留白 |
-| feishu_workplace | 侧栏简报、编号条目、逐步行动 |
-| alibaba_commercial | 大标题、关键数字、强弱对照 |
-| mckinsey_mece | 论证框架、比较矩阵、数据表格 |
-| oriental_classical | 右置标题、宋体注释、错位分栏 |
+| apple_titanium | 深色微光背景、渐变标题、半透明卡片与指标块 |
+| goldman_institutional | 深蓝侧栏封面、金线与衬线标题、研报表格 |
+| silicon_valley | 紫青微光、产品窗口式封面、功能与数据卡片 |
+| editorial_luxury | 暖纸色、衬线排印、细线与菱形装饰 |
+| feishu_workplace | 日光浅灰底、蓝色标签、任务卡片 |
+| alibaba_commercial | 橙色强调、商业卡片与关键数字 |
+| mckinsey_mece | 深蓝导航、框架卡片与量化表格 |
+| oriental_classical | 宣纸底、宋体、朱砂印章与书卷卡片 |
 
 名称用于描述设计参考，项目与这些公司没有官方关联。另有八款旧版配色保留在 SDK 中，不计入 80 套核心模板。
 
-下图为八款融资路演模板的实际 PPTX 页面渲染，完整页面在离线画廊中查看：
+下图为八款融资路演模板的实际 HTML 内容页，完整页面在离线画廊中查看。PPTX 使用基础可编辑排版：
 
 ![八款模板的实际内容版式](examples/template-layouts.png)
 
@@ -65,7 +69,7 @@ prettyppt gallery -o gallery/index.html --pptx
 prettyppt generate --demo -s annual_review -t editorial_luxury -o sample
 ```
 
-画廊预览直接使用同一个渲染器生成；`gallery --pptx` 还会导出 80 套可编辑 PPTX。所有模板样例都明确标注虚构示例。HTML 和画廊不依赖远程脚本，可离线查看。
+画廊预览直接使用 HTML 视觉渲染器生成；`gallery --pptx` 还会导出 80 套基础可编辑 PPTX。所有模板样例都明确标注虚构示例。HTML 和画廊不依赖远程脚本，可离线查看。
 
 ## Agent 的资料接口
 
@@ -107,7 +111,7 @@ python scripts/sync_agent_docs.py
 python -m prettyppt.cli gallery -o prettyppt/viewers/gallery.html
 ```
 
-HTML 和 PPTX 共用布局坐标与文字换行，PPTX 的文字、表格与图表保持可编辑。中文字体在不同电脑上可能发生替换；交付前仍应查看目标软件的实际渲染。自动结构检查不能代替视觉检查。
+HTML 和 PPTX 共用资料模型与分页逻辑，采用不同的视觉渲染方式。自由档按指定的布局坐标、配色和自定义元素渲染。PPTX 的文字、表格与图表保持可编辑，但不等同于 HTML 视觉效果。中文字体在不同电脑上可能发生替换；交付前仍应查看目标软件的实际渲染。自动结构检查不能代替视觉检查。
 
 v0.2 的 `generate` 要求输入资料；仅生成样例时显式使用 `--demo`。`get_template()` 返回带示例标识的模板参考，生产内容使用 `create_presentation()`。
 

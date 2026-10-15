@@ -131,6 +131,35 @@ class TestPlanning(unittest.TestCase):
         self.assertEqual(Presentation.from_dict(deck.to_dict()).to_dict(),deck.to_dict())
 
 class TestExports(unittest.TestCase):
+    def test_single_content_page_is_not_replaced_by_cover(self):
+        deck=create_presentation(brief(),pages=1)
+        self.assertIn('项目资料分散，需要清楚的交接方式。',generate_html_deck(deck))
+
+    def test_bespoke_html_preserves_image_and_metric_subtext(self):
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'source.png'
+            Image.new('RGB',(80,40),'#123456').save(path)
+            data=brief(sections=[{'title':'图片','image_url':str(path)},
+                {'title':'样本','metrics':[{'value':'12','label':'参与人数','subtext':'其中两人尚未完成试用'}]}])
+            rendered=generate_html_deck(create_presentation(data))
+            self.assertIn('data:image/png;base64,',rendered)
+            self.assertIn('其中两人尚未完成试用',rendered)
+
+    def test_free_mode_uses_requested_layout_and_colours(self):
+        data=brief(mode='free',design={'bg_color':'#123456'},sections=[{'title':'正文','body':'指定的布局内容。','layout':'annotation'}])
+        deck=create_presentation(data)
+        rendered=generate_html_deck(deck)
+        self.assertIn('background:#123456',rendered)
+        self.assertIn('left:165px',rendered)
+
+    def test_real_material_does_not_inherit_demo_company_or_restrictions(self):
+        for style in ('oriental_classical','goldman_institutional'):
+            rendered=generate_html_deck(create_presentation(brief(style_id=style)))
+            self.assertNotIn('流智科技',rendered)
+            self.assertNotIn('岁次丙午秋',rendered)
+            self.assertNotIn('FOR ACCREDITED INVESTORS ONLY',rendered)
+
     def test_chinese_punctuation_and_short_line_wrapping(self):
         text='这里是一段中文说明，让句号和逗号跟随前文。'
         lines=wrap_text(text,10)

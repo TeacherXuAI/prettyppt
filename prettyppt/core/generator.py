@@ -142,7 +142,7 @@ def _render_bespoke_slide(style_id: str, idx: int, total: int, pres: Presentatio
     bullets = [esc(b) for b in s.bullets]
     footer_text = "演示示例 · 内容与数据为虚构占位" if pres.is_demo else esc(s.footer or "")
 
-    is_cover = (idx == 0 or s.slide_type == "cover" or (s.layout and s.layout.startswith("cover_")))
+    is_cover = (s.slide_type == "cover" or (s.layout and s.layout.startswith("cover_")))
 
     # 1. STYLE 1: W1 · Apple Titanium Dark (苹果钛金暗夜)
     if style_id == "apple_titanium":
@@ -196,15 +196,15 @@ def _render_bespoke_slide(style_id: str, idx: int, total: int, pres: Presentatio
             return f"""
             <div style="width:100%;height:100%;{bg_style}display:flex;position:relative;box-sizing:border-box;">
               <div style="width:36%;background:linear-gradient(180deg,#00254A,#001832);display:flex;flex-direction:column;justify-content:flex-end;padding:8% 6%;">
-                <div style="font-size:72px;font-weight:200;color:rgba(255,255,255,.08);line-height:1;">2026</div>
-                <div style="font-size:12px;color:rgba(255,255,255,.4);letter-spacing:.22em;text-transform:uppercase;margin-top:14px;">GLOBAL STRATEGY RESEARCH</div>
+                <div style="font-size:72px;font-weight:200;color:rgba(255,255,255,.08);line-height:1;">{esc(pres.date or ('2026' if pres.is_demo else ''))}</div>
+                <div style="font-size:12px;color:rgba(255,255,255,.4);letter-spacing:.22em;text-transform:uppercase;margin-top:14px;">{eyebrow or 'GLOBAL STRATEGY RESEARCH'}</div>
               </div>
               <div style="flex:1;padding:8% 8%;display:flex;flex-direction:column;justify-content:center;position:relative;">
                 <div style="width:36px;height:2px;background:#C4A84A;margin-bottom:18px;"></div>
                 <h1 style="font-size:48px;font-weight:400;color:#00254A;line-height:1.2;margin-bottom:16px;">{title}</h1>
                 {f'<div style="font-size:18px;color:#5A6E85;line-height:1.6;margin-bottom:28px;">{subtitle}</div>' if subtitle else ''}
                 <div style="font-size:11px;color:#A0AEC0;letter-spacing:.18em;text-transform:uppercase;border-top:1px solid #E2E8F0;padding-top:14px;">
-                  CONFIDENTIAL · FOR ACCREDITED INVESTORS ONLY
+                  {('CONFIDENTIAL · FOR ACCREDITED INVESTORS ONLY' if pres.is_demo else esc(pres.audience))}
                 </div>
                 <div style="position:absolute;bottom:24px;left:8%;right:8%;display:flex;justify-content:space-between;font-size:12px;color:#A0AEC0;">
                   <span>{footer_text}</span>
@@ -243,14 +243,14 @@ def _render_bespoke_slide(style_id: str, idx: int, total: int, pres: Presentatio
               <div style="flex:1;padding:7% 7%;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:1;">
                 <div style="font-size:15px;font-weight:800;color:#635BFF;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;margin-bottom:16px;">
                   <span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#635BFF,#00D4FF);"></span>
-                  {esc(pres.scenario_id.upper())}
+                  {eyebrow or esc(pres.scenario_id.upper())}
                 </div>
                 <h1 style="font-size:52px;font-weight:800;color:#0A2540;line-height:1.15;letter-spacing:-.03em;margin-bottom:16px;">
                   {title}
                 </h1>
                 {f'<div style="font-size:18px;color:#8892A0;line-height:1.6;margin-bottom:24px;max-width:85%;">{subtitle}</div>' if subtitle else ''}
                 <div style="display:flex;gap:10px;">
-                  <span style="padding:5px 14px;border-radius:20px;background:#F8F9FF;border:1px solid #EAECFF;color:#635BFF;font-size:13px;font-weight:600;">Series Ready</span>
+                  <span style="padding:5px 14px;border-radius:20px;background:#F8F9FF;border:1px solid #EAECFF;color:#635BFF;font-size:13px;font-weight:600;">{('Series Ready' if pres.is_demo else '资料概览')}</span>
                   <span style="padding:5px 14px;border-radius:20px;background:#F0FCFF;border:1px solid #D6F6FF;color:#0891B2;font-size:13px;font-weight:600;">Silicon Valley Edition</span>
                 </div>
               </div>
@@ -261,7 +261,7 @@ def _render_bespoke_slide(style_id: str, idx: int, total: int, pres: Presentatio
                     <div style="width:8px;height:8px;border-radius:50%;background:#FFBD2E;"></div>
                     <div style="width:8px;height:8px;border-radius:50%;background:#28CA41;"></div>
                   </div>
-                  <div style="font-size:12px;font-family:monospace;color:#00D4FF;margin-bottom:8px;">// Intelligent Presentation Engine</div>
+                  <div style="font-size:12px;font-family:monospace;color:#00D4FF;margin-bottom:8px;">{('// Intelligent Presentation Engine' if pres.is_demo else title)}</div>
                   <div style="height:8px;background:rgba(99,91,255,.5);border-radius:4px;width:80%;margin-bottom:8px;"></div>
                   <div style="height:8px;background:rgba(0,212,255,.4);border-radius:4px;width:60%;margin-bottom:8px;"></div>
                   <div style="height:8px;background:rgba(255,255,255,.2);border-radius:4px;width:40%;"></div>
@@ -295,7 +295,7 @@ def _render_bespoke_slide(style_id: str, idx: int, total: int, pres: Presentatio
         if is_cover:
             return f"""
             <div style="width:100%;height:100%;{bg_style}display:flex;flex-direction:column;justify-content:center;align-items:center;padding:8% 12%;text-align:center;position:relative;box-sizing:border-box;">
-              <div style="font-size:13px;color:#C5A96A;letter-spacing:.25em;text-transform:uppercase;font-weight:600;margin-bottom:16px;">{eyebrow or 'MONOGRAPH · 2026'}</div>
+              <div style="font-size:13px;color:#C5A96A;letter-spacing:.25em;text-transform:uppercase;font-weight:600;margin-bottom:16px;">{eyebrow or ('MONOGRAPH · 2026' if pres.is_demo else 'MONOGRAPH')}</div>
               <h1 style="font-size:54px;font-weight:300;color:#1A1410;line-height:1.2;letter-spacing:.04em;margin-bottom:18px;">{title}</h1>
               <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
                 <span style="height:1px;background:#D4C090;width:32px;"></span>
@@ -337,10 +337,10 @@ def _render_bespoke_slide(style_id: str, idx: int, total: int, pres: Presentatio
               {f'<div style="font-size:18px;color:#646A73;line-height:1.6;margin-bottom:28px;max-width:80%;">{subtitle}</div>' if subtitle else ''}
               <div style="display:flex;gap:12px;">
                 <span style="padding:6px 14px;border-radius:6px;background:#FFFFFF;border:1px solid #DEE0E3;font-size:13px;color:#1F2329;font-weight:500;">
-                  飞书协作标准
+                  {('飞书协作标准' if pres.is_demo else '工作资料')}
                 </span>
                 <span style="padding:6px 14px;border-radius:6px;background:#3370FF;color:#FFFFFF;font-size:13px;font-weight:600;">
-                  全员可读文档
+                  {('全员可读文档' if pres.is_demo else '内容概要')}
                 </span>
               </div>
               <div style="position:absolute;bottom:24px;left:88px;right:88px;display:flex;justify-content:space-between;font-size:12px;color:#8F959E;">
@@ -411,20 +411,20 @@ def _render_bespoke_slide(style_id: str, idx: int, total: int, pres: Presentatio
               <div style="position:absolute;inset:0;background-image:radial-gradient(#2C2825 0.5px,transparent 0.5px);background-size:24px 24px;opacity:.06;"></div>
               <div style="flex:1;padding:8% 8%;display:flex;flex-direction:column;justify-content:center;z-index:2;">
                 <div style="font-size:13px;color:#8C7B6B;letter-spacing:.3em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-                  <span style="width:24px;height:1px;background:#8C7B6B;"></span> 东方智慧 · 智能协同
+                  <span style="width:24px;height:1px;background:#8C7B6B;"></span> {eyebrow or ('东方智慧 · 智能协同' if pres.is_demo else '')}
                 </div>
                 <h1 style="font-size:52px;font-weight:600;color:#24201D;line-height:1.25;letter-spacing:.12em;margin-bottom:18px;">
                   {title}
                 </h1>
                 <div style="font-size:18px;color:#6E6359;letter-spacing:.12em;line-height:1.8;border-left:2px solid #C4A27A;padding-left:14px;margin-bottom:24px;max-width:85%;">
-                  {subtitle or '以大衍之术，驭纷繁之务。格物致知，神机自运。'}
+                  {subtitle or ('以大衍之术，驭纷繁之务。格物致知，神机自运。' if pres.is_demo else '')}
                 </div>
-                <div style="font-size:12px;color:#9E9284;letter-spacing:.2em;">岁次丙午秋 · 仅呈受邀贤达</div>
+                <div style="font-size:12px;color:#9E9284;letter-spacing:.2em;">{('岁次丙午秋 · 仅呈受邀贤达' if pres.is_demo else esc(pres.date or ''))}</div>
               </div>
               <div style="width:34%;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;">
                 <div style="border:2px solid #A82E2E;padding:14px 18px;border-radius:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(168,46,46,.03);">
                   <div style="writing-mode:vertical-rl;font-size:22px;font-weight:700;color:#A82E2E;letter-spacing:.25em;line-height:1.5;">
-                    流智科技·甲子之玺
+                    {('流智科技·甲子之玺' if pres.is_demo else esc(pres.author or '资料汇编'))}
                   </div>
                 </div>
               </div>
@@ -510,7 +510,7 @@ def _render_standard_content(s: Slide, style_id: str, theme: Optional[Theme]) ->
     if s.cards:
         cards_html = []
         n = len(s.cards)
-        cols = 3 if n >= 3 else n
+        cols = 2 if s.layout in ("matrix", "comparison") else (3 if n >= 3 else n)
         for c in s.cards:
             tag_html = f'<span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:8px;">{esc(c.tag or "POINT")}</span>' if c.tag else ""
             metric_html = f'<div style="font-size:24px;font-weight:700;margin-top:14px;padding-top:8px;">{esc(c.metric)}</div>' if c.metric else ""
@@ -534,7 +534,7 @@ def _render_standard_content(s: Slide, style_id: str, theme: Optional[Theme]) ->
                     <h3 style="font-size:18px;font-weight:700;color:#00254A;margin-bottom:8px;font-family:'Georgia',serif;">{esc(c.title)}</h3>
                     <p style="font-size:13px;color:#4A5568;line-height:1.6;">{esc(c.desc)}</p>
                   </div>
-                  {f'<div style="font-size:22px;font-weight:700;color:#00254A;margin-top:12px;padding-top:8px;border-top:1px solid #E2E8F0;font-family:\'Georgia\',serif;">{esc(c.metric)}</div>' if c.metric else ''}
+                  {f'<div style="font-size:22px;font-weight:700;color:#00254A;margin-top:12px;padding-top:8px;border-top:1px solid #E2E8F0;font-family:Georgia,serif;">{esc(c.metric)}</div>' if c.metric else ''}
                 </div>
                 """
             elif style_id == "silicon_valley":
@@ -644,6 +644,10 @@ def _render_standard_content(s: Slide, style_id: str, theme: Optional[Theme]) ->
                   {f'<div style="font-size:11px;font-weight:700;">{delta_val}</div>' if delta_val else ''}
                 </div>
                 """
+            if m.subtext:
+                subtext = '<div style="font-size:12px;line-height:1.5;margin-top:8px;">%s</div>' % esc(m.subtext)
+                position = m_block.rfind('</div>')
+                m_block = m_block[:position] + subtext + m_block[position:]
             metrics_html.append(m_block)
         parts.append(f'<div style="display:grid;grid-template-columns:repeat({cols},1fr);gap:16px;margin-bottom:20px;">{"".join(metrics_html)}</div>')
 
@@ -660,11 +664,12 @@ def _render_standard_content(s: Slide, style_id: str, theme: Optional[Theme]) ->
             th_style = "padding:10px 14px;font-size:13px;font-weight:700;text-align:left;color:#00254A;background:#F8FAFC;border-bottom:2px solid #00254A;font-family:'Georgia',serif;"
             td_style = "padding:10px 14px;font-size:13px;color:#2D3748;border-bottom:1px solid #EDF2F7;font-family:'Georgia',serif;"
         
-        table_rows = "".join([f"<tr>{''.join([f'<td style=\"{td_style}\">{c}</td>' for c in r])}</tr>" for r in rows])
+        table_rows = ''.join('<tr>' + ''.join('<td style="%s">%s</td>' % (td_style, c) for c in row) + '</tr>' for row in rows)
+        table_headers = ''.join('<th style="%s">%s</th>' % (th_style, h) for h in headers)
         parts.append(f"""
         <div style="overflow-x:auto;margin-bottom:20px;">
           <table style="width:100%;border-collapse:collapse;">
-            <thead><tr>{''.join([f'<th style=\"{th_style}\">{h}</th>' for h in headers])}</tr></thead>
+            <thead><tr>{table_headers}</tr></thead>
             <tbody>{table_rows}</tbody>
           </table>
         </div>
@@ -673,6 +678,9 @@ def _render_standard_content(s: Slide, style_id: str, theme: Optional[Theme]) ->
     # 4. Chart if present
     if s.chart:
         parts.append(f'<div style="width:100%;height:320px;margin-bottom:20px;">{_chart_svg(s.chart, 1264, 320, theme)}</div>')
+
+    if s.image_url:
+        parts.append(f'<img alt="用户提供的图片" style="display:block;width:100%;height:400px;object-fit:contain;margin-bottom:20px;" src="{_image_data(s.image_url)}">')
 
     # 5. Bullets list if present
     if bullets:
@@ -735,7 +743,8 @@ def generate_html_deck(pres: Presentation) -> str:
     """
     theme = pres.theme
 
-    # Step 1: Pre-compose all slides. This guarantees color validation and geometric verification.
+    # Validate source data and native layout capacity. The separate HTML layout
+    # also needs browser rendering checks before delivery.
     composed_nodes_per_slide = []
     for i, slide in enumerate(pres.slides):
         nodes = compose(pres, slide, i)
@@ -753,8 +762,8 @@ def generate_html_deck(pres: Presentation) -> str:
         is_active = "active" if i == 0 else ""
         nodes = composed_nodes_per_slide[i]
 
-        # If custom layout or custom elements, render composed nodes directly
-        if slide.layout == "custom" or slide.elements:
+        # Free composition must honour the requested coordinates and colours.
+        if pres.mode == "free" or slide.layout == "custom" or slide.elements:
             content = "".join(_html_node(n, theme) for n in nodes)
             slide_html = f"""
             <section class="slide {is_active}" id="slide-{i}" data-index="{i}" data-layout="{html.escape(slide.layout or '')}" aria-label="{html.escape(slide.title, quote=True)}" style="width:1440px;height:810px;position:absolute;left:0;top:0;background:{theme.bg_color};overflow:hidden;">
@@ -799,7 +808,7 @@ svg{{width:100%;height:100%}}
   body{{background:white}}
   main{{display:block;height:auto;overflow:visible}}
   .viewport{{width:auto!important;height:auto!important}}
-  .slide{{display:block!important;position:relative;transform:none!important;break-after:page;page-break-after:always;box-shadow:none;border-radius:0;margin-bottom:20px}}
+  .slide{{display:block!important;position:relative!important;transform:none!important;break-after:page;page-break-after:always;box-shadow:none;border-radius:0;margin-bottom:0}}
   .slide:last-child{{break-after:auto}}
   nav{{display:none}}
   *{{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
@@ -1003,7 +1012,7 @@ def generate_pptx_deck(pres: Presentation, output_path: str) -> bool:
 
         prs.save(str(output_path))
         return True
-    except ImportError:
-        return False
+    except ImportError as exc:
+        raise ImportError('PPTX export requires python-pptx and Pillow. Install PrettyPPT with its dependencies.') from exc
     except Exception as e:
         raise

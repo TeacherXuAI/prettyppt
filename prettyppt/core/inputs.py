@@ -29,7 +29,7 @@ def read_material(path):
         try:
             from pypdf import PdfReader
         except ImportError as exc:
-            raise ValueError('PDF extraction needs: pip install "prettyppt[pdf]". Agents may also use their own PDF reader.') from exc
+            raise ValueError('PDF extraction needs: pip install pypdf. Agents may also use their own PDF reader.') from exc
         pages = []
         for i, page in enumerate(PdfReader(str(path)).pages):
             content = page.extract_text() or ''
